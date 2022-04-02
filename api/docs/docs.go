@@ -10,23 +10,287 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",
-            "url": "http://www.swagger.io/support",
-            "email": "support@swagger.io"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+            "url": "t.me/rON2_webdev",
+            "email": "abbosamritdidnov@gmail.com"
         },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/comments": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create comment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "comments"
+                ],
+                "summary": "Create comment",
+                "parameters": [
+                    {
+                        "description": "data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateCommentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Comment"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/likes": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create like",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "likes"
+                ],
+                "summary": "Create like",
+                "parameters": [
+                    {
+                        "description": "like",
+                        "name": "like",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateLikeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/likes/{post_id}/{user_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete like",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "likes"
+                ],
+                "summary": "Delete like",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "post_id",
+                        "name": "post_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Login",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/posts": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get all posts",
                 "consumes": [
                     "application/json"
@@ -75,6 +339,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Create a new post",
                 "consumes": [
                     "application/json"
@@ -93,7 +362,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Post"
+                            "$ref": "#/definitions/models.CreatePostRequest"
                         }
                     }
                 ],
@@ -109,7 +378,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/models.Post"
+                                            "$ref": "#/definitions/models.CreatePostRequest"
                                         }
                                     }
                                 }
@@ -133,6 +402,11 @@ const docTemplate = `{
         },
         "/posts/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get a post",
                 "consumes": [
                     "application/json"
@@ -189,6 +463,11 @@ const docTemplate = `{
         },
         "/posts/{id}/comments": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get post comments",
                 "consumes": [
                     "application/json"
@@ -248,6 +527,11 @@ const docTemplate = `{
         },
         "/posts/{id}/likes": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get post likes",
                 "consumes": [
                     "application/json"
@@ -307,6 +591,11 @@ const docTemplate = `{
         },
         "/posts/{id}/likes_count": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get post likes count",
                 "consumes": [
                     "application/json"
@@ -361,42 +650,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
-            "get": {
-                "description": "Get all users",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get all users",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/models.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/models.Response"
-                        }
-                    }
-                }
-            },
+        "/register": {
             "post": {
-                "description": "Create a new user",
+                "description": "Register",
                 "consumes": [
                     "application/json"
                 ],
@@ -404,9 +660,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "auth"
                 ],
-                "summary": "Create a new user",
+                "summary": "Register",
                 "parameters": [
                     {
                         "description": "User",
@@ -414,7 +670,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.CreateUserRequest"
                         }
                     }
                 ],
@@ -440,8 +696,68 @@ const docTemplate = `{
                 }
             }
         },
+        "/users": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get all users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.UserDTO"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/users/email/{email}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get user by email",
                 "consumes": [
                     "application/json"
@@ -466,7 +782,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.UserDTO"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -486,6 +814,11 @@ const docTemplate = `{
         },
         "/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get a user",
                 "consumes": [
                     "application/json"
@@ -510,7 +843,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.UserDTO"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -530,6 +875,11 @@ const docTemplate = `{
         },
         "/users/{id}/posts": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get post by user ID",
                 "consumes": [
                     "application/json"
@@ -612,6 +962,62 @@ const docTemplate = `{
                 }
             }
         },
+        "models.CreateCommentRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "post_id": {
+                    "type": "integer"
+                },
+                "reply_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CreateLikeRequest": {
+            "type": "object",
+            "properties": {
+                "post_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CreatePostRequest": {
+            "type": "object",
+            "properties": {
+                "author_id": {
+                    "type": "integer"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CreateUserRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Like": {
             "type": "object",
             "properties": {
@@ -626,6 +1032,17 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.Login": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
                 }
             }
         },
@@ -667,6 +1084,9 @@ const docTemplate = `{
         "models.User": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
@@ -680,11 +1100,30 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "models.UserDTO": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
-        "BasicAuth": {
-            "type": "basic"
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
@@ -693,10 +1132,10 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/api/v1",
+	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Swagger Example API",
-	Description:      "This is a sample server celler server.",
+	Title:            "Swagger API",
+	Description:      "Social media pet project.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

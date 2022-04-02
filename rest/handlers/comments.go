@@ -1,27 +1,32 @@
 package handlers
 
 import (
-	"net/http"
-
 	"github.com/abbos-ron2/go-medium/models"
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Create comment
+// @Description Create comment
+// @Tags comments
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param data body models.CreateCommentRequest true "data"
+// @Success 200 {object} models.Response{data=models.Comment}
+// @Failure 400 {object} models.Response
+// @Failure 500 {object} models.Response
+// @Router /comments [post]
 func (h *handler) CreateComment(c *gin.Context) {
-	var comment models.Comment
+	var comment models.CreateCommentRequest
 
 	if err := c.ShouldBind(&comment); err != nil {
 		return
 	}
 
 	if err := h.storage.CreateComment(c, comment); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		h.handleError(c, err)
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"message": "comment created",
-	})
+	h.handleSuccess(c, "comment created")
 }

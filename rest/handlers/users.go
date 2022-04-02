@@ -5,29 +5,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary Create a new user
-// @Description Create a new user
-// @Tags users
-// @Accept  json
-// @Produce  json
-// @Param user body models.User true "User"
-// @Success 200 {object} models.Response
-// @Failure 400 {object} models.Response
-// @Failure 500 {object} models.Response
-// @Router /users [post]
-func (h *handler) CreateUser(c *gin.Context) {
-	var user models.User
-
-	if err := c.ShouldBind(&user); err != nil {
-		return
+func makeUserDTO(u models.User) models.UserDTO {
+	return models.UserDTO{
+		ID:        u.ID,
+		Email:     u.Email,
+		Name:      u.Name,
+		CreatedAt: u.CreatedAt,
 	}
-
-	if err := h.storage.CreateUser(c, user); err != nil {
-		h.handleError(c, err)
-		return
-	}
-
-	h.handleSuccess(c, "user created")
 }
 
 // @Summary Get a user
@@ -35,8 +19,9 @@ func (h *handler) CreateUser(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param id path string true "User ID"
-// @Success 200 {object} models.Response
+// @Success 200 {object} models.Response{data=models.UserDTO}
 // @Failure 400 {object} models.Response
 // @Failure 500 {object} models.Response
 // @Router /users/{id} [get]
@@ -48,7 +33,7 @@ func (h *handler) GetUser(c *gin.Context) {
 		h.handleError(c, err)
 		return
 	}
-	h.handleSuccess(c, user)
+	h.handleSuccess(c, makeUserDTO(user))
 }
 
 // @Summary Get user by email
@@ -56,8 +41,9 @@ func (h *handler) GetUser(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param email path string true "User email"
-// @Success 200 {object} models.Response
+// @Success 200 {object} models.Response{data=models.UserDTO}
 // @Failure 400 {object} models.Response
 // @Failure 500 {object} models.Response
 // @Router /users/email/{email} [get]
@@ -69,7 +55,7 @@ func (h *handler) GetUserByEmail(c *gin.Context) {
 		h.handleError(c, err)
 		return
 	}
-	h.handleSuccess(c, user)
+	h.handleSuccess(c, makeUserDTO(user))
 }
 
 // @Summary Get all users
@@ -77,12 +63,14 @@ func (h *handler) GetUserByEmail(c *gin.Context) {
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} models.Response
+// @Security ApiKeyAuth
+// @Success 200 {object} models.Response{data=[]models.UserDTO}
 // @Failure 400 {object} models.Response
 // @Failure 500 {object} models.Response
 // @Router /users [get]
 func (h *handler) GetAllUsers(c *gin.Context) {
 	var users []models.User
+	var usersDTO []models.UserDTO
 
 	err := h.storage.GetAllUsers(c, &users)
 	if err != nil {
@@ -90,5 +78,9 @@ func (h *handler) GetAllUsers(c *gin.Context) {
 		return
 	}
 
-	h.handleSuccess(c, users)
+	for _, v := range users {
+		usersDTO = append(usersDTO, makeUserDTO(v))
+	}
+
+	h.handleSuccess(c, usersDTO)
 }

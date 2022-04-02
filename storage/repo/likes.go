@@ -7,6 +7,6 @@ import (
 )
 
 type LikeI interface {
-	CreateLike(ctx context.Context, like models.Like) error
+	CreateLike(ctx context.Context, like models.CreateLikeRequest) error
 	DeleteLike(ctx context.Context, postID, userID string) error
 }

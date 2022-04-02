@@ -7,7 +7,7 @@ import (
 )
 
 type UserI interface {
-	CreateUser(ctx context.Context, user models.User) error
+	CreateUser(ctx context.Context, user models.CreateUserRequest) error
 	GetUser(ctx context.Context, id string, user *models.User) error
 	GetUserByEmail(ctx context.Context, email string, user *models.User) error
 	GetAllUsers(ctx context.Context, users *[]models.User) error

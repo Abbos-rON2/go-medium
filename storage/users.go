@@ -6,7 +6,7 @@ import (
 	"github.com/abbos-ron2/go-medium/models"
 )
 
-func (s *storage) CreateUser(ctx context.Context, user models.User) error {
+func (s *storage) CreateUser(ctx context.Context, user models.CreateUserRequest) error {
 	_, err := s.db.Exec(
 		ctx,
 		`INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
@@ -19,31 +19,33 @@ func (s *storage) CreateUser(ctx context.Context, user models.User) error {
 func (s *storage) GetUser(ctx context.Context, id string, user *models.User) error {
 	return s.db.QueryRow(
 		ctx,
-		`SELECT id, name, email, password FROM users WHERE id = $1`,
+		`SELECT id, name, email, password, created_at FROM users WHERE id = $1`,
 		id,
 	).Scan(
 		&user.ID,
 		&user.Name,
 		&user.Email,
 		&user.Password,
+		&user.CreatedAt,
 	)
 }
 func (s *storage) GetUserByEmail(ctx context.Context, email string, user *models.User) error {
 	return s.db.QueryRow(
 		ctx,
-		`SELECT id, name, email, password FROM users WHERE email = $1`,
+		`SELECT id, name, email, password, created_at FROM users WHERE email = $1`,
 		email,
 	).Scan(
 		&user.ID,
 		&user.Name,
 		&user.Email,
 		&user.Password,
+		&user.CreatedAt,
 	)
 }
 func (s *storage) GetAllUsers(ctx context.Context, users *[]models.User) error {
 	rows, err := s.db.Query(
 		ctx,
-		`SELECT id, name, email, password FROM users`,
+		`SELECT id, name, email, password, created_at FROM users`,
 	)
 	if err != nil {
 		return err
@@ -57,6 +59,7 @@ func (s *storage) GetAllUsers(ctx context.Context, users *[]models.User) error {
 			&user.Name,
 			&user.Email,
 			&user.Password,
+			&user.CreatedAt,
 		); err != nil {
 			return err
 		}

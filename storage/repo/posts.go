@@ -7,7 +7,7 @@ import (
 )
 
 type PostI interface {
-	CreatePost(ctx context.Context, post models.Post) error
+	CreatePost(ctx context.Context, post models.CreatePostRequest) error
 	GetPost(ctx context.Context, id string, post *models.Post) error
 	GetAllPosts(ctx context.Context, posts *[]models.Post) error
 	GetPostsByUser(ctx context.Context, userID string, posts *[]models.Post) error

@@ -6,18 +6,16 @@ import (
 	"github.com/abbos-ron2/go-medium/models"
 )
 
-func (s *storage) CreateLike(ctx context.Context, like models.Like) error {
+func (s *storage) CreateLike(ctx context.Context, like models.CreateLikeRequest) error {
 	_, err := s.db.Exec(ctx, `
 		INSERT INTO likes (
 			post_id,
 			user_id,
-			created_at
 		) VALUES (
 			$1,
 			$2,
-			$3
 		)
-	`, like.PostID, like.UserID, like.CreatedAt)
+	`, like.PostID, like.UserID)
 	return err
 }
 func (s *storage) DeleteLike(ctx context.Context, postID, userID string) error {

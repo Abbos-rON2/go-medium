@@ -7,7 +7,7 @@ import (
 )
 
 // Posts
-func (s *storage) CreatePost(ctx context.Context, post models.Post) error {
+func (s *storage) CreatePost(ctx context.Context, post models.CreatePostRequest) error {
 	_, err := s.db.Exec(
 		ctx,
 		`INSERT INTO posts (title, content, author_id) VALUES ($1, $2, $3)`,

@@ -12,13 +12,14 @@ import (
 // @Tags posts
 // @Accept  json
 // @Produce  json
-// @Param post body models.Post true "Post"
-// @Success 200 {object} models.Response{data=models.Post}
+// @Security ApiKeyAuth
+// @Param post body models.CreatePostRequest true "Post"
+// @Success 200 {object} models.Response{data=models.CreatePostRequest}
 // @Failure 400 {object} models.Response
 // @Failure 500 {object} models.Response
 // @Router /posts [post]
 func (h *handler) CreatePost(c *gin.Context) {
-	var post models.Post
+	var post models.CreatePostRequest
 
 	if err := c.ShouldBind(&post); err != nil {
 		return
@@ -37,6 +38,7 @@ func (h *handler) CreatePost(c *gin.Context) {
 // @Tags posts
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param id path string true "Post ID"
 // @Success 200 {object} models.Response{data=models.Post}
 // @Failure 400 {object} models.Response
@@ -58,6 +60,7 @@ func (h *handler) GetPost(c *gin.Context) {
 // @Tags posts
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Success 200 {object} models.Response{data=[]models.Post}
 // @Failure 400 {object} models.Response
 // @Failure 500 {object} models.Response
@@ -78,6 +81,7 @@ func (h *handler) GetAllPosts(c *gin.Context) {
 // @Tags posts
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param id path string true "User ID"
 // @Success 200 {object} models.Response{data=[]models.Post}
 // @Failure 400 {object} models.Response
@@ -99,6 +103,7 @@ func (h *handler) GetPostsByUser(c *gin.Context) {
 // @Tags posts
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param id path string true "Post ID"
 // @Success 200 {object} models.Response{data=[]models.Comment}
 // @Failure 400 {object} models.Response
@@ -120,6 +125,7 @@ func (h *handler) GetPostComments(c *gin.Context) {
 // @Tags posts
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param id path string true "Post ID"
 // @Success 200 {object} models.Response{data=[]models.Like}
 // @Failure 400 {object} models.Response
@@ -141,6 +147,7 @@ func (h *handler) GetPostLikes(c *gin.Context) {
 // @Tags posts
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param id path string true "Post ID"
 // @Success 200 {object} models.Response{data=int}
 // @Failure 400 {object} models.Response

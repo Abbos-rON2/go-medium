@@ -7,5 +7,5 @@ import (
 )
 
 type CommentI interface {
-	CreateComment(ctx context.Context, comment models.Comment) error
+	CreateComment(ctx context.Context, comment models.CreateCommentRequest) error
 }
