@@ -25,7 +25,7 @@ func (h *handler) CreatePost(c *gin.Context) {
 		return
 	}
 
-	if err := h.storage.CreatePost(c, post); err != nil {
+	if err := h.storage.Post().CreatePost(c, post); err != nil {
 		h.handleError(c, err)
 		return
 	}
@@ -47,7 +47,7 @@ func (h *handler) CreatePost(c *gin.Context) {
 func (h *handler) GetPost(c *gin.Context) {
 	var post models.Post
 
-	err := h.storage.GetPost(c, c.Param("id"), &post)
+	err := h.storage.Post().GetPost(c, c.Param("id"), &post)
 	if err != nil {
 		h.handleError(c, err)
 		return
@@ -68,7 +68,7 @@ func (h *handler) GetPost(c *gin.Context) {
 func (h *handler) GetAllPosts(c *gin.Context) {
 	var posts []models.Post
 
-	err := h.storage.GetAllPosts(c, &posts)
+	err := h.storage.Post().GetAllPosts(c, &posts)
 	if err != nil {
 		h.handleError(c, err)
 		return
@@ -90,7 +90,7 @@ func (h *handler) GetAllPosts(c *gin.Context) {
 func (h *handler) GetPostsByUser(c *gin.Context) {
 	var posts []models.Post
 
-	err := h.storage.GetPostsByUser(c, c.Param("id"), &posts)
+	err := h.storage.Post().GetPostsByUser(c, c.Param("id"), &posts)
 	if err != nil {
 		h.handleError(c, err)
 		return
@@ -112,7 +112,7 @@ func (h *handler) GetPostsByUser(c *gin.Context) {
 func (h *handler) GetPostComments(c *gin.Context) {
 	var comments []models.Comment
 
-	err := h.storage.GetPostComments(c, c.Param("id"), &comments)
+	err := h.storage.Post().GetPostComments(c, c.Param("id"), &comments)
 	if err != nil {
 		h.handleError(c, err)
 		return
@@ -134,7 +134,7 @@ func (h *handler) GetPostComments(c *gin.Context) {
 func (h *handler) GetPostLikes(c *gin.Context) {
 	var likes []models.Like
 
-	err := h.storage.GetPostLikes(c, c.Param("id"), &likes)
+	err := h.storage.Post().GetPostLikes(c, c.Param("id"), &likes)
 	if err != nil {
 		h.handleError(c, err)
 		return
@@ -156,7 +156,7 @@ func (h *handler) GetPostLikes(c *gin.Context) {
 func (h *handler) GetPostLikesCount(c *gin.Context) {
 	var count int
 
-	err := h.storage.GetPostLikesCount(c, c.Param("id"), &count)
+	err := h.storage.Post().GetPostLikesCount(c, c.Param("id"), &count)
 	if err != nil {
 		h.handleError(c, err)
 		return

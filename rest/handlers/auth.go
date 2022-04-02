@@ -28,7 +28,7 @@ func (h *handler) Login(c *gin.Context) {
 	}
 
 	dbUser := models.User{}
-	if err := h.storage.GetUserByEmail(c, user.Email, &dbUser); err != nil {
+	if err := h.storage.User().GetUserByEmail(c, user.Email, &dbUser); err != nil {
 		h.handleError(c, err)
 		return
 	}
@@ -75,7 +75,7 @@ func (h *handler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	if err := h.storage.CreateUser(c, user); err != nil {
+	if err := h.storage.User().CreateUser(c, user); err != nil {
 		h.handleError(c, err)
 		return
 	}

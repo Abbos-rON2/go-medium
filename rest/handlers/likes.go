@@ -24,7 +24,7 @@ func (h *handler) CreateLike(c *gin.Context) {
 		return
 	}
 
-	if err := h.storage.CreateLike(c, like); err != nil {
+	if err := h.storage.Like().CreateLike(c, like); err != nil {
 		h.handleError(c, err)
 		return
 	}
@@ -49,7 +49,7 @@ func (h *handler) DeleteLike(c *gin.Context) {
 	postId := c.Param("post_id")
 	userId := c.Param("user_id")
 
-	if err := h.storage.DeleteLike(c, postId, userId); err != nil {
+	if err := h.storage.Like().DeleteLike(c, postId, userId); err != nil {
 		h.handleError(c, err)
 		return
 	}

@@ -23,7 +23,7 @@ func (h *handler) CreateComment(c *gin.Context) {
 		return
 	}
 
-	if err := h.storage.CreateComment(c, comment); err != nil {
+	if err := h.storage.Comment().CreateComment(c, comment); err != nil {
 		h.handleError(c, err)
 		return
 	}

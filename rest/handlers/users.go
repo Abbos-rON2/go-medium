@@ -28,7 +28,7 @@ func makeUserDTO(u models.User) models.UserDTO {
 func (h *handler) GetUser(c *gin.Context) {
 	var user models.User
 
-	err := h.storage.GetUser(c, c.Param("id"), &user)
+	err := h.storage.User().GetUser(c, c.Param("id"), &user)
 	if err != nil {
 		h.handleError(c, err)
 		return
@@ -50,7 +50,7 @@ func (h *handler) GetUser(c *gin.Context) {
 func (h *handler) GetUserByEmail(c *gin.Context) {
 	var user models.User
 
-	err := h.storage.GetUserByEmail(c, c.Param("email"), &user)
+	err := h.storage.User().GetUserByEmail(c, c.Param("email"), &user)
 	if err != nil {
 		h.handleError(c, err)
 		return
@@ -72,7 +72,7 @@ func (h *handler) GetAllUsers(c *gin.Context) {
 	var users []models.User
 	var usersDTO []models.UserDTO
 
-	err := h.storage.GetAllUsers(c, &users)
+	err := h.storage.User().GetAllUsers(c, &users)
 	if err != nil {
 		h.handleError(c, err)
 		return

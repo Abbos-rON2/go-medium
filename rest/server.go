@@ -40,6 +40,7 @@ func New(cfg config.Config, s storage.StorageI) (srv *http.Server) {
 		users.GET("/", h.GetAllUsers)
 		users.GET("/:id/posts", h.GetPostsByUser)
 	}
+
 	posts := r.Group("/posts").Use(h.AuthMiddleware)
 	{
 		posts.POST("/", h.CreatePost)
@@ -59,6 +60,16 @@ func New(cfg config.Config, s storage.StorageI) (srv *http.Server) {
 	comments := r.Group("/comments").Use(h.AuthMiddleware)
 	{
 		comments.POST("/", h.CreateComment)
+	}
+
+	chats := r.Group("/chats").Use(h.AuthMiddleware)
+	{
+		chats.POST("/", h.CreateChat)
+		chats.GET("/:id", h.GetChat)
+		chats.GET("/:id/messages", h.GetChatMessages)
+		chats.GET("/:id/users", h.GetChatUsers)
+		chats.GET("/", h.GetAllChats)
+		// chats.POST("/:id/users/:user_id", h.AddUserToChat)
 	}
 
 	srv = &http.Server{
