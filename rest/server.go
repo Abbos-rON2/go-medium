@@ -84,11 +84,11 @@ func New(cfg config.Config, s storage.StorageI) (srv *http.Server) {
 		subscriptions.POST("/{target_id}", h.Subscribe)
 		subscriptions.DELETE("/{target_id}", h.Unsubscribe)
 
-		subscriptions.GET("/{target_id}/subscribers", h.GetSubscribers)
-		subscriptions.GET("/{target_id}/subscribers_count", h.GetSubscribersCount)
+		subscriptions.GET("/{user_id}/subscribers", h.GetSubscribers)
+		subscriptions.GET("/{user_id}/subscribers_count", h.GetSubscribersCount)
 
-		subscriptions.GET("/{target_id}/subscriptions", h.GetSubscriptions)
-		subscriptions.GET("/{target_id}/subscriptions_count", h.GetSubscriptionsCount)
+		subscriptions.GET("/{user_id}/subscriptions", h.GetSubscriptions)
+		subscriptions.GET("/{user_id}/subscriptions_count", h.GetSubscriptionsCount)
 
 	}
 

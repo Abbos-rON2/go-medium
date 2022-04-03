@@ -1061,7 +1061,7 @@ paths:
       summary: Get user subscribers
       tags:
       - subscriptions
-  /subscriptions/users/{user_id}/subscribers_count:
+  /subscriptions/{user_id}/subscribers_count:
     get:
       consumes:
       - application/json
@@ -1101,7 +1101,7 @@ paths:
       summary: Get user subscribers count
       tags:
       - subscriptions
-  /subscriptions/users/{user_id}/subscriptions:
+  /subscriptions/{user_id}/subscriptions:
     get:
       consumes:
       - application/json
@@ -1143,7 +1143,7 @@ paths:
       summary: Get user subscriptions
       tags:
       - subscriptions
-  /subscriptions/users/{user_id}/subscriptions_count:
+  /subscriptions/{user_id}/subscriptions_count:
     get:
       consumes:
       - application/json

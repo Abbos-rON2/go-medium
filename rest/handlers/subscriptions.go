@@ -91,7 +91,7 @@ func (h *handler) GetSubscribers(c *gin.Context) {
 // @Failure 400 {object} models.Response
 // @Failure 404 {object} models.Response
 // @Failure 500 {object} models.Response
-// @Router /subscriptions/users/{user_id}/subscribers_count [get]
+// @Router /subscriptions/{user_id}/subscribers_count [get]
 func (h *handler) GetSubscribersCount(c *gin.Context) {
 	userID := c.Param("user_id")
 	count := 0
@@ -115,7 +115,7 @@ func (h *handler) GetSubscribersCount(c *gin.Context) {
 // @Failure 400 {object} models.Response
 // @Failure 404 {object} models.Response
 // @Failure 500 {object} models.Response
-// @Router /subscriptions/users/{user_id}/subscriptions [get]
+// @Router /subscriptions/{user_id}/subscriptions [get]
 func (h *handler) GetSubscriptions(c *gin.Context) {
 	userID := c.Param("user_id")
 	subscriptions := []models.Subscription{}
@@ -139,7 +139,7 @@ func (h *handler) GetSubscriptions(c *gin.Context) {
 // @Failure 400 {object} models.Response
 // @Failure 404 {object} models.Response
 // @Failure 500 {object} models.Response
-// @Router /subscriptions/users/{user_id}/subscriptions_count [get]
+// @Router /subscriptions/{user_id}/subscriptions_count [get]
 func (h *handler) GetSubscriptionsCount(c *gin.Context) {
 	userID := c.Param("user_id")
 	count := 0
