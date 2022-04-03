@@ -17,7 +17,9 @@ type PostI interface {
 	GetPostsByUser(ctx context.Context, userID string, posts *[]models.Post) error
 	GetPostComments(ctx context.Context, postID string, comments *[]models.Comment) error
 	GetPostLikes(ctx context.Context, postID string, likes *[]models.Like) error
-	GetPostLikesCount(ctx context.Context, postID string, likesCount *int) error
+	GetPostLikesCount(ctx context.Context, postID string, likesCount *models.Count) error
+
+	DeletePost(ctx context.Context, id string) error
 }
 
 func NewPostRepo(db *pgx.Conn) PostI {
@@ -40,7 +42,7 @@ func (r *postRepo) CreatePost(ctx context.Context, post models.CreatePostRequest
 func (r *postRepo) GetPost(ctx context.Context, id string, post *models.Post) error {
 	return r.db.QueryRow(
 		ctx,
-		`SELECT id, title, content, author_id, created_at FROM posts WHERE id = $1`,
+		`SELECT id, title, content, author_id, created_at, updated_at FROM posts WHERE id = $1`,
 		id,
 	).Scan(
 		&post.ID,
@@ -48,12 +50,13 @@ func (r *postRepo) GetPost(ctx context.Context, id string, post *models.Post) er
 		&post.Content,
 		&post.AuthorID,
 		&post.CreatedAt,
+		&post.UpdatedAt,
 	)
 }
 func (r *postRepo) GetAllPosts(ctx context.Context, posts *[]models.Post) error {
 	rows, err := r.db.Query(
 		ctx,
-		`SELECT id, title, content, author_id, created_at FROM posts`,
+		`SELECT id, title, content, author_id, created_at, updated_at FROM posts`,
 	)
 	if err != nil {
 		return err
@@ -68,6 +71,7 @@ func (r *postRepo) GetAllPosts(ctx context.Context, posts *[]models.Post) error 
 			&post.Content,
 			&post.AuthorID,
 			&post.CreatedAt,
+			&post.UpdatedAt,
 		); err != nil {
 			return err
 		}
@@ -78,7 +82,7 @@ func (r *postRepo) GetAllPosts(ctx context.Context, posts *[]models.Post) error 
 func (r *postRepo) GetPostsByUser(ctx context.Context, userID string, posts *[]models.Post) error {
 	rows, err := r.db.Query(
 		ctx,
-		`SELECT id, title, content, author_id, created_at FROM posts WHERE author_id = $1`,
+		`SELECT id, title, content, author_id, created_at, updated_at FROM posts WHERE author_id = $1`,
 		userID,
 	)
 	if err != nil {
@@ -94,6 +98,7 @@ func (r *postRepo) GetPostsByUser(ctx context.Context, userID string, posts *[]m
 			&post.Content,
 			&post.AuthorID,
 			&post.CreatedAt,
+			&post.UpdatedAt,
 		); err != nil {
 			return err
 		}
@@ -106,7 +111,7 @@ func (r *postRepo) GetPostsByUser(ctx context.Context, userID string, posts *[]m
 func (r *postRepo) GetPostComments(ctx context.Context, postID string, comments *[]models.Comment) error {
 	rows, err := r.db.Query(
 		ctx,
-		`SELECT id, user_id, content, reply_id, created_at FROM comments WHERE post_id = $1`,
+		`SELECT id, author_id, content, reply_id, created_at FROM comments WHERE post_id = $1`,
 		postID,
 	)
 	if err != nil {
@@ -116,14 +121,18 @@ func (r *postRepo) GetPostComments(ctx context.Context, postID string, comments 
 
 	for rows.Next() {
 		var comment models.Comment
+		var replyID *int
 		if err := rows.Scan(
 			&comment.ID,
-			&comment.UserID,
+			&comment.AuthorID,
 			&comment.Content,
-			&comment.ReplyID,
+			&replyID,
 			&comment.CreatedAt,
 		); err != nil {
 			return err
+		}
+		if replyID != nil {
+			comment.ReplyID = *replyID
 		}
 		*comments = append(*comments, comment)
 	}
@@ -154,12 +163,21 @@ func (r *postRepo) GetPostLikes(ctx context.Context, postID string, likes *[]mod
 	}
 	return nil
 }
-func (r *postRepo) GetPostLikesCount(ctx context.Context, postID string, count *int) error {
+func (r *postRepo) GetPostLikesCount(ctx context.Context, postID string, count *models.Count) error {
 
 	if err := r.db.QueryRow(ctx, `
 		SELECT COUNT(*) FROM likes WHERE post_id = $1
-	`, postID).Scan(&count); err != nil {
+	`, postID).Scan(&count.Count); err != nil {
 		return err
 	}
 	return nil
+}
+
+func (r *postRepo) DeletePost(ctx context.Context, id string) error {
+	_, err := r.db.Exec(
+		ctx,
+		`DELETE FROM posts WHERE id = $1`,
+		id,
+	)
+	return err
 }

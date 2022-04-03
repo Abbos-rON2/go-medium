@@ -10,6 +10,7 @@ import (
 // @Tags messages
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param message body models.CreateMessageRequest true "message"
 // @Success 200 {object} models.Response{data=string}
 // @Failure 400 {object} models.Response
@@ -35,6 +36,7 @@ func (h *handler) CreateMessage(c *gin.Context) {
 // @Tags messages
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param id path string true "message id"
 // @Success 200 {object} models.Response{data=models.Message}
 // @Failure 400 {object} models.Response
@@ -55,6 +57,7 @@ func (h *handler) GetMessage(c *gin.Context) {
 // @Tags messages
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Success 200 {object} models.Response{data=[]models.Message}
 // @Failure 400 {object} models.Response
 // @Failure 500 {object} models.Response
@@ -74,6 +77,7 @@ func (h *handler) GetAllMessages(c *gin.Context) {
 // @Tags messages
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Param chat_id path string true "chat id"
 // @Success 200 {object} models.Response{data=[]models.Message}
 // @Failure 400 {object} models.Response

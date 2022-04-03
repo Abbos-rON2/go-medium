@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 
+	"github.com/abbos-ron2/go-medium/errs"
 	"github.com/abbos-ron2/go-medium/models"
 	"github.com/jackc/pgx/v4"
 )
@@ -19,19 +20,25 @@ func NewCommentRepo(db *pgx.Conn) CommentI {
 }
 
 func (r *commentRepo) CreateComment(ctx context.Context, comment models.CreateCommentRequest) error {
+	var replyID *int
+	if comment.ReplyID != 0 {
+		replyID = &comment.ReplyID
+	}
 	_, err := r.db.Exec(ctx, `
 		INSERT INTO comments (
 			post_id,
-			user_id,
+			author_id,
 			content,
-			reply_id,
+			reply_id
 		) VALUES (
 			$1,
 			$2,
 			$3,
-			$4, 
-			$5
+			$4
 		)
-	`, comment.PostID, comment.UserID, comment.Content, comment.ReplyID)
+	`, comment.PostID, comment.AuthorID, comment.Content, replyID)
+	if err != nil {
+		return errs.Errf(errs.ErrDatabaseError, err)
+	}
 	return err
 }

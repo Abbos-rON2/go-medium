@@ -69,7 +69,27 @@ func New(cfg config.Config, s storage.StorageI) (srv *http.Server) {
 		chats.GET("/:id/messages", h.GetChatMessages)
 		chats.GET("/:id/users", h.GetChatUsers)
 		chats.GET("/", h.GetAllChats)
-		// chats.POST("/:id/users/:user_id", h.AddUserToChat)
+		chats.POST("/:id/users/:user_id", h.AddUserToChat)
+	}
+	messages := r.Group("/messages").Use(h.AuthMiddleware)
+	{
+		messages.POST("/", h.CreateMessage)
+		messages.GET("/:id", h.GetMessage)
+		messages.GET("/", h.GetAllMessages)
+		messages.GET("/:id/chat", h.GetChat)
+	}
+
+	subscriptions := r.Group("/subscriptions").Use(h.AuthMiddleware)
+	{
+		subscriptions.POST("/{target_id}", h.Subscribe)
+		subscriptions.DELETE("/{target_id}", h.Unsubscribe)
+
+		subscriptions.GET("/{target_id}/subscribers", h.GetSubscribers)
+		subscriptions.GET("/{target_id}/subscribers_count", h.GetSubscribersCount)
+
+		subscriptions.GET("/{target_id}/subscriptions", h.GetSubscriptions)
+		subscriptions.GET("/{target_id}/subscriptions_count", h.GetSubscriptionsCount)
+
 	}
 
 	srv = &http.Server{

@@ -31,6 +31,7 @@ func (r *userRepo) CreateUser(ctx context.Context, user models.CreateUserRequest
 	)
 	return err
 }
+
 func (r *userRepo) GetUser(ctx context.Context, id string, user *models.User) error {
 	return r.db.QueryRow(
 		ctx,
@@ -44,6 +45,7 @@ func (r *userRepo) GetUser(ctx context.Context, id string, user *models.User) er
 		&user.CreatedAt,
 	)
 }
+
 func (r *userRepo) GetUserByEmail(ctx context.Context, email string, user *models.User) error {
 	return r.db.QueryRow(
 		ctx,
@@ -57,6 +59,7 @@ func (r *userRepo) GetUserByEmail(ctx context.Context, email string, user *model
 		&user.CreatedAt,
 	)
 }
+
 func (r *userRepo) GetAllUsers(ctx context.Context, users *[]models.User) error {
 	rows, err := r.db.Query(
 		ctx,

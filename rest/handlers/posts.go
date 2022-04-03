@@ -24,6 +24,7 @@ func (h *handler) CreatePost(c *gin.Context) {
 	if err := c.ShouldBind(&post); err != nil {
 		return
 	}
+	post.AuthorID = c.GetInt("user_id")
 
 	if err := h.storage.Post().CreatePost(c, post); err != nil {
 		h.handleError(c, err)
@@ -139,6 +140,7 @@ func (h *handler) GetPostLikes(c *gin.Context) {
 		h.handleError(c, err)
 		return
 	}
+
 	h.handleSuccess(c, likes)
 }
 
@@ -149,12 +151,12 @@ func (h *handler) GetPostLikes(c *gin.Context) {
 // @Produce  json
 // @Security ApiKeyAuth
 // @Param id path string true "Post ID"
-// @Success 200 {object} models.Response{data=int}
+// @Success 200 {object} models.Response{data=models.Count}
 // @Failure 400 {object} models.Response
 // @Failure 500 {object} models.Response
 // @Router /posts/{id}/likes_count [get]
 func (h *handler) GetPostLikesCount(c *gin.Context) {
-	var count int
+	var count models.Count
 
 	err := h.storage.Post().GetPostLikesCount(c, c.Param("id"), &count)
 	if err != nil {

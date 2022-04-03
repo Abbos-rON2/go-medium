@@ -7,14 +7,15 @@ import (
 )
 
 type storage struct {
-	cfg         config.Config
-	db          *pgx.Conn
-	userRepo    repo.UserI
-	postRepo    repo.PostI
-	commentRepo repo.CommentI
-	likeRepo    repo.LikeI
-	chatRepo    repo.ChatI
-	messageRepo repo.MessageI
+	cfg              config.Config
+	db               *pgx.Conn
+	userRepo         repo.UserI
+	postRepo         repo.PostI
+	commentRepo      repo.CommentI
+	likeRepo         repo.LikeI
+	chatRepo         repo.ChatI
+	messageRepo      repo.MessageI
+	subscriptionRepo repo.SubscriptionI
 }
 
 type StorageI interface {
@@ -24,18 +25,20 @@ type StorageI interface {
 	Like() repo.LikeI
 	Chat() repo.ChatI
 	Message() repo.MessageI
+	Subscription() repo.SubscriptionI
 }
 
 func New(cfg config.Config, db *pgx.Conn) *storage {
 	return &storage{
-		cfg:         cfg,
-		db:          db,
-		userRepo:    repo.NewUserRepo(db),
-		postRepo:    repo.NewPostRepo(db),
-		commentRepo: repo.NewCommentRepo(db),
-		likeRepo:    repo.NewLikeRepo(db),
-		chatRepo:    repo.NewChatRepo(db),
-		messageRepo: repo.NewMessageRepo(db),
+		cfg:              cfg,
+		db:               db,
+		userRepo:         repo.NewUserRepo(db),
+		postRepo:         repo.NewPostRepo(db),
+		commentRepo:      repo.NewCommentRepo(db),
+		likeRepo:         repo.NewLikeRepo(db),
+		chatRepo:         repo.NewChatRepo(db),
+		messageRepo:      repo.NewMessageRepo(db),
+		subscriptionRepo: repo.NewSubscriptionRepo(db),
 	}
 }
 
@@ -56,4 +59,7 @@ func (s *storage) Chat() repo.ChatI {
 }
 func (s *storage) Message() repo.MessageI {
 	return s.messageRepo
+}
+func (s *storage) Subscription() repo.SubscriptionI {
+	return s.subscriptionRepo
 }

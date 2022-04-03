@@ -11,5 +11,5 @@ type Like struct {
 
 type CreateLikeRequest struct {
 	PostID int `json:"post_id"`
-	UserID int `json:"user_id"`
+	UserID int `json:"-"`
 }

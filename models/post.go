@@ -14,5 +14,5 @@ type Post struct {
 type CreatePostRequest struct {
 	Title    string `json:"title"`
 	Content  string `json:"content"`
-	AuthorID int    `json:"author_id"`
+	AuthorID int    `json:"-"`
 }

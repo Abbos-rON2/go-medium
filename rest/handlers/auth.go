@@ -82,6 +82,7 @@ func (h *handler) CreateUser(c *gin.Context) {
 
 	h.handleSuccess(c, "user created")
 }
+
 func (h *handler) AuthMiddleware(c *gin.Context) {
 	var claims = &models.Token{}
 
@@ -107,5 +108,6 @@ func (h *handler) AuthMiddleware(c *gin.Context) {
 		c.Abort()
 		return
 	}
+	c.Set("user_id", claims.UserID)
 	c.Next()
 }

@@ -13,6 +13,8 @@ definitions:
     type: object
   models.Comment:
     properties:
+      author_id:
+        type: integer
       content:
         type: string
       created_at:
@@ -23,7 +25,10 @@ definitions:
         type: integer
       reply_id:
         type: integer
-      user_id:
+    type: object
+  models.Count:
+    properties:
+      count:
         type: integer
     type: object
   models.CreateChatRequest:
@@ -41,14 +46,10 @@ definitions:
         type: integer
       reply_id:
         type: integer
-      user_id:
-        type: integer
     type: object
   models.CreateLikeRequest:
     properties:
       post_id:
-        type: integer
-      user_id:
         type: integer
     type: object
   models.CreateMessageRequest:
@@ -62,8 +63,6 @@ definitions:
     type: object
   models.CreatePostRequest:
     properties:
-      author_id:
-        type: integer
       content:
         type: string
       title:
@@ -131,6 +130,17 @@ definitions:
       data: {}
       message:
         type: string
+    type: object
+  models.Subscription:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      user_id:
+        type: integer
     type: object
   models.User:
     properties:
@@ -267,6 +277,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
       summary: Get all messages from a chat
       tags:
       - messages
@@ -447,7 +459,7 @@ paths:
             - $ref: '#/definitions/models.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/models.Comment'
+                  type: string
               type: object
         "400":
           description: Bad Request
@@ -512,11 +524,6 @@ paths:
       - description: post_id
         in: path
         name: post_id
-        required: true
-        type: string
-      - description: user_id
-        in: path
-        name: user_id
         required: true
         type: string
       produces:
@@ -610,6 +617,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
       summary: Get all messages
       tags:
       - messages
@@ -644,6 +653,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
       summary: Create a message
       tags:
       - messages
@@ -678,6 +689,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
       summary: Get a message
       tags:
       - messages
@@ -882,7 +895,7 @@ paths:
             - $ref: '#/definitions/models.Response'
             - properties:
                 data:
-                  type: integer
+                  $ref: '#/definitions/models.Count'
               type: object
         "400":
           description: Bad Request
@@ -927,6 +940,249 @@ paths:
       summary: Register
       tags:
       - auth
+  /subscriptions/{target_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Unsubscribe from user
+      parameters:
+      - description: Target ID
+        in: path
+        name: target_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Unsubscribe from user
+      tags:
+      - subscriptions
+    post:
+      consumes:
+      - application/json
+      description: Subscribe to user
+      parameters:
+      - description: Target ID
+        in: path
+        name: target_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Subscribe to user
+      tags:
+      - subscriptions
+  /subscriptions/{user_id}/subscribers:
+    get:
+      consumes:
+      - application/json
+      description: Get user subscribers
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Subscription'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user subscribers
+      tags:
+      - subscriptions
+  /subscriptions/users/{user_id}/subscribers_count:
+    get:
+      consumes:
+      - application/json
+      description: Get user subscribers count
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Count'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user subscribers count
+      tags:
+      - subscriptions
+  /subscriptions/users/{user_id}/subscriptions:
+    get:
+      consumes:
+      - application/json
+      description: Get user subscriptions
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Subscription'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user subscriptions
+      tags:
+      - subscriptions
+  /subscriptions/users/{user_id}/subscriptions_count:
+    get:
+      consumes:
+      - application/json
+      description: Get user subscriptions count
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Count'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user subscriptions count
+      tags:
+      - subscriptions
   /users:
     get:
       consumes:

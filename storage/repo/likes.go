@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 
+	"github.com/abbos-ron2/go-medium/errs"
 	"github.com/abbos-ron2/go-medium/models"
 	"github.com/jackc/pgx/v4"
 )
@@ -22,12 +23,15 @@ func (r *likeRepo) CreateLike(ctx context.Context, like models.CreateLikeRequest
 	_, err := r.db.Exec(ctx, `
 		INSERT INTO likes (
 			post_id,
-			user_id,
+			user_id
 		) VALUES (
 			$1,
-			$2,
+			$2
 		)
 	`, like.PostID, like.UserID)
+	if err != nil {
+		return errs.Errf(errs.ErrLikeAleadyExists, err)
+	}
 	return err
 }
 func (r *likeRepo) DeleteLike(ctx context.Context, postID, userID string) error {

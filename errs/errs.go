@@ -6,12 +6,14 @@ import (
 )
 
 var (
-	ErrInvalidPassword = New("invalid password")
-	ErrInvalidToken    = New("invalid token")
-	ErrUnauthorized    = New("unauthorized")
-	ErrNotFound        = New("entity not found")
-	ErrInternal        = New("internal error")
-	ErrValidation      = New("validation error")
+	ErrInvalidPassword  = New("invalid password")
+	ErrInvalidToken     = New("invalid token")
+	ErrUnauthorized     = New("unauthorized")
+	ErrNotFound         = New("entity not found")
+	ErrInternal         = New("internal error")
+	ErrValidation       = New("validation error")
+	ErrDatabaseError    = New("database error")
+	ErrLikeAleadyExists = New("like already exists")
 )
 
 type Error struct {
@@ -27,8 +29,8 @@ func (e *Error) Unwrap() error {
 	return e.err
 }
 
-func Errf(err error, tmpl string, args ...interface{}) error {
-	return &Error{err: err, msg: fmt.Sprintf(tmpl, args...)}
+func Errf(err error, tmpl error, args ...interface{}) error {
+	return &Error{err: err, msg: fmt.Sprintf(tmpl.Error(), args...)}
 }
 
 func New(text string) *Error {
